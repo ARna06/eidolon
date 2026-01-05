@@ -1,7 +1,7 @@
 #ifndef CORE_CORE_HPP
 #define CORE_CORE_HPP
 
-#include "horizon/core/logger.hpp"
+#include "eidolon/core/logger.hpp"
 
 #include <atomic>
 #include <chrono>
@@ -14,27 +14,27 @@
 #include <string_view>
 #include <unordered_map>
 
-#ifdef horizon_profile_enable
-#define horizon_profile()                                                      \
+#ifdef eidolon_profile_enable
+#define eidolon_profile()                                                      \
   core::timer::frame_function_timer_t frame_function_timer {                   \
     std::source_location::current().function_name()                            \
   }
 #else
-#define horizon_profile()
+#define eidolon_profile()
 #endif
 
 #define check(truthy, ...)                                                     \
   do {                                                                         \
     if (!(truthy)) {                                                           \
-      horizon_error(__VA_ARGS__);                                              \
+      eidolon_error(__VA_ARGS__);                                              \
       std::terminate();                                                        \
     }                                                                          \
   } while (false)
 
 #ifndef NDEBUG
-#define horizon_assert(truthy, ...) check(truthy, __VA_ARGS__)
+#define eidolon_assert(truthy, ...) check(truthy, __VA_ARGS__)
 #else
-#define horizon_assert(truthy, ...)
+#define eidolon_assert(truthy, ...)
 #endif
 
 #define define_handle(name)                                                    \
