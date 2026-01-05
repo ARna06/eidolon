@@ -1,3 +1,7 @@
-# odin-landing-page
+# Eidolon
 
-This is my solution to the second project given by the curriculum of the Odin Project in the flexbox section of the guide.
+My own graphics engine written in C++ and Vulkan.
+
+## TODO
+
+-[ ]Populate readme with relevant information.
