@@ -9,9 +9,9 @@ file(GLOB_RECURSE CPP_SRC_FILES ./*.cpp)
 add_executable(rendergraph ${CPP_SRC_FILES})
 
 target_link_libraries(rendergraph
-	PUBLIC horizon
+	PUBLIC eidolon
 )
 
 target_include_directories(rendergraph
-	PUBLIC horizon
+	PUBLIC  eidolon
 )

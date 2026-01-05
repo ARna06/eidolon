@@ -9,9 +9,9 @@ file(GLOB_RECURSE CPP_SRC_FILES ./*.cpp)
 add_executable(bindless ${CPP_SRC_FILES})
 
 target_link_libraries(bindless
-	PUBLIC horizon
+	PUBLIC eidolon
 )
 
 target_include_directories(bindless
-	PUBLIC horizon
+	PUBLIC eidolon
 )
