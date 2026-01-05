@@ -5,3 +5,5 @@ My own graphics engine written in C++ and Vulkan.
 ## TODO
 
 - Populate readme with relevant information.
+- Write documentation.
+- Clean up codebase.
