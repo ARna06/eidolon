@@ -1,0 +1,134 @@
+cmake_minimum_required(VERSION 3.22)
+
+project(eidolon)
+
+include(FetchContent)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# # options
+option(EIDOLON_BUILD_EXAMPLES "build EXAMPLES" OFF)
+
+
+# # deps
+set(FETCHCONTENT_QUIET FALSE)
+
+set(IMGUI_GLFW_PATH ${glfw_SOURCE_DIR}/include)
+set(IMGUI_VULKAN_BACKEND ON CACHE INTERNAL "Imgui vulkan backend")
+set(IMGUI_GLFW_BACKEND ON CACHE INTERNAL "Imgui glfw backend")
+set(IMGUI_IMPL_VULKAN_USE_LOADER ON CACHE INTERNAL "Imgui vulkan use loader")
+set(IMGUI_IMPL_VULKAN_NO_PROTOTYPES ON CACHE INTERNAL "Imgui vulkan no prototypes")
+set(IMGUI_IMPL_VULKAN_USE_VOLK OFF CACHE INTERNAL "Imgui vulkan use volk")
+set(GLFW_BUILD_WAYLAND OFF CACHE INTERNAL "GLFW build wayland")
+set(SLANG_EMBED_CORE_MODULE ON)
+set(SLANG_EMBED_CORE_MODULE_SOURCE OFF)
+set(SLANG_ENABLE_DXIL OFF)
+set(SLANG_ENABLE_GFX OFF)
+set(SLANG_ENABLE_SLANGD OFF)
+set(SLANG_ENABLE_SLANGC OFF)
+set(SLANG_ENABLE_SLANGRT OFF)
+set(SLANG_ENABLE_SLANG_GLSLANG OFF)
+set(SLANG_ENABLE_TESTS OFF)
+set(SLANG_ENABLE_EXAMPLES OFF)
+set(SLANG_ENABLE_RELEASE_LTO OFF)
+set(SLANG_ENABLE_SLANG_RHI OFF)
+set(SLANG_ENABLE_REPLAYER OFF)
+set(SLANG_USE_SYSTEM_VULKAN_HEADERS OFF)
+
+FetchContent_Declare(
+  math
+  GIT_REPOSITORY https://github.com/sivansh11/math
+  GIT_TAG main
+)
+FetchContent_Declare(
+  bvh
+  GIT_REPOSITORY https://github.com/sivansh11/bvh
+  GIT_TAG master
+)
+FetchContent_Declare(
+  stb_cmake
+  GIT_REPOSITORY https://github.com/sivansh11/stb_cmake.git
+  GIT_TAG main
+)
+FetchContent_Declare(
+  glfw
+  GIT_REPOSITORY https://github.com/glfw/glfw.git
+  GIT_TAG e7ea71be039836da3a98cea55ae5569cb5eb885c
+)
+FetchContent_Declare(
+  assimp
+  GIT_REPOSITORY https://github.com/assimp/assimp.git
+  GIT_TAG a4d8a5fec3fc42b17c6411b68035017c7d797298
+)
+FetchContent_Declare(
+  volk
+  GIT_REPOSITORY https://github.com/zeux/volk.git
+  GIT_TAG 58689c063427f5bad4f133625049b1a3c5dd8287
+)
+FetchContent_Declare(
+  vk-bootstrap
+  GIT_REPOSITORY https://github.com/charles-lunarg/vk-bootstrap.git
+  GIT_TAG e7ea02d1917016f2dc6ba543b1a61366d7827788
+)
+FetchContent_Declare(
+  VulkanMemoryAllocator
+  GIT_REPOSITORY https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator.git
+  GIT_TAG c788c52156f3ef7bc7ab769cb03c110a53ac8fcb
+)
+FetchContent_Declare(
+  imgui_cmake
+  GIT_REPOSITORY https://github.com/sivansh11/imgui_cmake.git
+  GIT_TAG main
+  # GIT_TAG c63ccd36f8c843270a5184f3016971d729bbabf8
+)
+FetchContent_Declare(
+  slang
+  GIT_REPOSITORY https://github.com/shader-slang/slang.git
+  GIT_TAG vulkan-sdk-1.4.328.1
+)
+FetchContent_Declare(
+  model
+  GIT_REPOSITORY https://github.com/sivansh11/model
+  GIT_TAG main
+)
+
+FetchContent_MakeAvailable(math)
+FetchContent_MakeAvailable(bvh)
+FetchContent_MakeAvailable(stb_cmake)
+FetchContent_MakeAvailable(glfw)
+FetchContent_MakeAvailable(assimp)
+FetchContent_MakeAvailable(volk)
+FetchContent_MakeAvailable(vk-bootstrap)
+FetchContent_MakeAvailable(VulkanMemoryAllocator)
+FetchContent_MakeAvailable(imgui_cmake)
+FetchContent_MakeAvailable(slang)
+FetchContent_MakeAvailable(model)
+
+# # src
+add_subdirectory(src)
+
+
+if (EIDOLON_BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
+
+
+# best practices, read https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html bottom of the page
+# # # Require out-of-source builds
+file(TO_CMAKE_PATH "${PROJECT_BINARY_DIR}/CMakeLists.txt" LOC_PATH)
+if(EXISTS "${LOC_PATH}")
+  message(FATAL_ERROR "You cannot build in a source directory (or any directory with a CMakeLists.txt file). Please make a build subdirectory. Feel free to remove CMakeCache.txt and CMakeFiles.")
+endif()
+
+# default built type if CMAKE_BUILD_TYPE is not set
+set(DEFAULT_BUILT_TYPE "Debug")
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+  message(STATUS "Setting build type to '${DEFAULT_BUILT_TYPE}' as none was specified.")
+  set(CMAKE_BUILD_TYPE "${DEFAULT_BUILT_TYPE}" CACHE
+      STRING "Choose the type of build." FORCE)
+  # Set the possible values of build type for cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+endif()
